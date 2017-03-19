@@ -9,19 +9,19 @@
 /* Begin PBXBuildFile section */
 		964DC1EE1E6DE53500B969A9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964DC1ED1E6DE53500B969A9 /* AppDelegate.swift */; };
 		964DC1F01E6DE53500B969A9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964DC1EF1E6DE53500B969A9 /* ViewController.swift */; };
-		964DC1F31E6DE53500B969A9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 964DC1F11E6DE53500B969A9 /* Main.storyboard */; };
 		964DC1F51E6DE53500B969A9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 964DC1F41E6DE53500B969A9 /* Assets.xcassets */; };
 		964DC1F81E6DE53500B969A9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 964DC1F61E6DE53500B969A9 /* LaunchScreen.storyboard */; };
+		96F829271E7D564A00DD9720 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96F829261E7D564A00DD9720 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		964DC1EA1E6DE53500B969A9 /* Tinkoff Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinkoff Chat.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		964DC1ED1E6DE53500B969A9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		964DC1EF1E6DE53500B969A9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		964DC1F21E6DE53500B969A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		964DC1F41E6DE53500B969A9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		964DC1F71E6DE53500B969A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		964DC1F91E6DE53500B969A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		96F829261E7D564A00DD9720 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,8 +56,8 @@
 			children = (
 				964DC1ED1E6DE53500B969A9 /* AppDelegate.swift */,
 				964DC1EF1E6DE53500B969A9 /* ViewController.swift */,
-				964DC1F11E6DE53500B969A9 /* Main.storyboard */,
 				964DC1F41E6DE53500B969A9 /* Assets.xcassets */,
+				96F829261E7D564A00DD9720 /* Main.storyboard */,
 				964DC1F61E6DE53500B969A9 /* LaunchScreen.storyboard */,
 				964DC1F91E6DE53500B969A9 /* Info.plist */,
 			);
@@ -124,9 +124,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96F829271E7D564A00DD9720 /* Main.storyboard in Resources */,
 				964DC1F81E6DE53500B969A9 /* LaunchScreen.storyboard in Resources */,
 				964DC1F51E6DE53500B969A9 /* Assets.xcassets in Resources */,
-				964DC1F31E6DE53500B969A9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,14 +145,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		964DC1F11E6DE53500B969A9 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				964DC1F21E6DE53500B969A9 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		964DC1F61E6DE53500B969A9 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -300,6 +292,7 @@
 				964DC1FE1E6DE53500B969A9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
