@@ -25,12 +25,18 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Имя пользователя" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kaU-xZ-Ixq">
                                 <rect key="frame" x="16" y="20" width="147" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="IWl-aF-A8j"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.47838342189999999" green="0.47846597429999999" blue="0.47836583849999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Имя пользователя" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dus-th-Fvj">
                                 <rect key="frame" x="16" y="41" width="343" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Tdf-sj-JGI"/>
+                                </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
@@ -45,10 +51,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="UserIconPlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="u9t-33-E7C">
-                                <rect key="frame" x="92.5" y="217" width="190" height="190"/>
+                                <rect key="frame" x="93" y="217" width="190" height="190"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="u9t-33-E7C" secondAttribute="height" multiplier="1:1" id="LQa-3C-tFj"/>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="190" id="phf-NG-iDd"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="190" id="rz3-dj-6Y7"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="psm-3G-cj5" appends="YES" id="Z5l-s8-Tyw"/>
@@ -68,6 +74,9 @@
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="О себе" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WGR-vP-K5J">
                                 <rect key="frame" x="16" y="79" width="56" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="vph-zZ-pS8"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.47838342189788818" green="0.4784659743309021" blue="0.47836583852767944" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -87,20 +96,26 @@
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Цвет текста" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HIp-6y-MhI">
                                 <rect key="frame" x="16" y="554" width="95" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="ZVT-Ug-4Xy"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.47838342189999999" green="0.47846597429999999" blue="0.47836583849999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aCM-yL-7SX">
-                                <rect key="frame" x="16" y="583" width="65" height="30"/>
+                                <rect key="frame" x="16" y="583" width="64.5" height="30"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="3qA-wc-CQl"/>
+                                </constraints>
                                 <state key="normal" title=" "/>
                                 <connections>
                                     <action selector="changeLabelColor:" destination="BYZ-38-t0r" eventType="touchUpInside" id="z5F-8X-0aY"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jwS-Ks-zgT">
-                                <rect key="frame" x="86" y="583" width="64.5" height="30"/>
+                                <rect key="frame" x="85.5" y="583" width="64.5" height="30"/>
                                 <color key="backgroundColor" red="0.93059724569320679" green="0.27452105283737183" blue="0.18561512231826782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title=" "/>
                                 <connections>
@@ -108,7 +123,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TWd-Qc-SM9">
-                                <rect key="frame" x="155.5" y="583" width="64.5" height="30"/>
+                                <rect key="frame" x="155" y="583" width="65" height="30"/>
                                 <color key="backgroundColor" red="0.46219772100448608" green="0.94239664077758789" blue="0.078686796128749847" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title=" "/>
                                 <connections>
