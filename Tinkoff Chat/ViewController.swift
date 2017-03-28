@@ -10,7 +10,6 @@ import UIKit
 
 class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    private var tapCounter = 0
     @IBOutlet weak var colorLabel: UILabel!
     @IBOutlet var toolBar: UIToolbar!
     @IBOutlet weak var userPic: UIImageView!
@@ -76,10 +75,15 @@ class ViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate,
     }
     
     // MARK - Button actions
+    @IBAction func cancelAction(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
     @IBAction func saveAction(_ sender: Any) {
         print("Сохранение данных профиля")
+        self.dismiss(animated: true, completion: nil)
     }
+    
     @IBAction func changeLabelColor(_ sender: UIButton) {
         self.colorLabel.textColor = sender.backgroundColor
     }
