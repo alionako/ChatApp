@@ -177,7 +177,7 @@ class ConversationsListViewController: UIViewController, UITableViewDelegate, UI
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -8,17 +8,19 @@
 
 import UIKit
 
-class ConversationViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ConversationViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     @IBOutlet weak var table: UITableView!
     var dataSource : [String]?
-    
+    var frame : CGRect?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.table.rowHeight = UITableViewAutomaticDimension
         self.table.estimatedRowHeight = 100
+        
+        frame = self.view.frame
         
         self.dataSource = [" ", "Сообщение номер 2", "Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение"]
     }
@@ -44,4 +46,16 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
         cell.txt = dataSource?[indexPath.row]
         return cell
     }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        self.view.frame = CGRect.init(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height - 300)
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.frame = frame!
+        textField.resignFirstResponder()
+        return true
+    }
+    
 }
