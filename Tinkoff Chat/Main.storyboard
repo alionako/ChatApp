@@ -479,6 +479,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="contactTable" destination="Veg-j9-e7Z" id="Ldc-tB-HJ9"/>
                         <segue destination="s9H-aQ-dHE" kind="show" identifier="openChat" id="aEn-Ej-Ipv"/>
                     </connections>
                 </viewController>

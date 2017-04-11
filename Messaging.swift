@@ -18,28 +18,47 @@ protocol Communicator {
 
 class MultipeerCommunicator : NSObject, Communicator {
     
-    private let serviceType = "tinkoff-chat"
-    private let peerID = MCPeerID(displayName: UIDevice.current.name)
-    
-    var _online : Bool
-    var _delegate : CommunicatorDelegate?
+    let serviceType : String = "tinkoff-chat"
+    let discoveryInfo : [String : String]? = ["userName" : "Aliona"]
+    let peerID = MCPeerID(displayName: UIDevice.current.name)
     
     var advertiser : MCNearbyServiceAdvertiser
-    var browser : MCNearbyServiceBrowser?
+    var browser : MCNearbyServiceBrowser
     
     var sessionsList : [MCSession]? = nil
     
+    var _online : Bool = false
+    var _delegate : CommunicatorDelegate?
+    
     override init() {
-        advertiser = MCNearbyServiceAdvertiser.init(peer: peerID, discoveryInfo: ["userName" : "Aliona"], serviceType: serviceType)
-        _online = false
+        advertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
+        browser = MCNearbyServiceBrowser(peer: MCPeerID(displayName: UIDevice.current.name), serviceType: serviceType)
+        
         super.init()
+        
         advertiser.delegate = self
         advertiser.startAdvertisingPeer()
+        
+        browser.delegate = self
+        browser.startBrowsingForPeers()
+        
+        online = true
+    }
+    
+    deinit {
+        advertiser.stopAdvertisingPeer()
+        browser.stopBrowsingForPeers()
     }
     
     func sendMessage(string: String, to userID: String, completionHandler:
         ((_ success : Bool, _ error: Error?) -> ())?) {
         let message = ["eventType": "TextMessage", "messageId": generateMessageId(), "text": string]
+        var rawData : Data? = nil
+        do {
+            rawData = try JSONSerialization.data(withJSONObject: message, options: .prettyPrinted)
+        } catch {
+        }
+        
     }
     
     weak var delegate : CommunicatorDelegate? {
@@ -57,11 +76,6 @@ class MultipeerCommunicator : NSObject, Communicator {
         }
         set {
             _online = newValue
-//            if newValue == true {
-//                advertiser.startAdvertisingPeer()
-//            } else {
-//                advertiser.stopAdvertisingPeer()
-//            }
         }
     }
 }
@@ -70,46 +84,72 @@ extension MultipeerCommunicator : MCNearbyServiceAdvertiserDelegate {
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
         NSLog("%@", "didNotStartAdvertisingPeer: \(error)")
+        self.delegate?.failedToStartAdvertising(error: error)
     }
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         NSLog("%@", "didReceiveInvitationFromPeer \(peerID)")
+        
+    }
+}
+
+extension MultipeerCommunicator : MCNearbyServiceBrowserDelegate {
+    
+    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+        NSLog("%@", "foundPeer: \(peerID)")
+        self.delegate?.didFoundUser(userID: peerID.displayName, userName: info?["userName"])
+    }
+    
+    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+        NSLog("%@", "lostPeer: \(peerID)")
+        self.delegate?.didLostUser(userID: peerID.displayName)
+    }
+    
+    func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
+        NSLog("%@", "didNotStartBrowsingForPeers: \(error)")
+        self.delegate?.failedToStartAdvertising(error: error)
     }
 }
 
 class CommunicationManager : CommunicatorDelegate {
     
+    var contactListViewController : ConversationsListViewController? = nil
+    var contactList : [String : String?]? = nil
+    
     func didReceiveMessage(text: String, fromUser: String, toUser: String) {
-     
-    }
-
-    func failedToStartAdvertising(error: Error) {
-        print("Failed to start advertising: \(error.localizedDescription)")
-    }
-
-    func failedToStartBrowsingForUsers(error: Error) {
-        print("Failed to start browsing for users: \(error.localizedDescription)")
-    }
-
-    func didLostUser(userID: String) {
         
     }
-
-    func didFoundUser(userID: String, userName: String?) {
     
+    func failedToStartAdvertising(error: Error) {
+        contactListViewController?.showAlertWithText("Не удалось включить обнаружение другими устройствами!")
+    }
+    
+    func failedToStartBrowsingForUsers(error: Error) {
+        contactListViewController?.showAlertWithText("Не удалось начать поиск пользователей!")
+    }
+    
+    func didLostUser(userID: String) {
+        contactList?.removeValue(forKey: userID)
+        contactListViewController?.contactTable.reloadData()
+    }
+    
+    func didFoundUser(userID: String, userName: String?) {
+        contactList = [userID : userName]
+        contactListViewController?.contactList = contactList!
+        contactListViewController?.contactTable.reloadData()
     }
 }
 
 protocol CommunicatorDelegate : class {
-    //discovering 
+    //discovering
     func didFoundUser(userID : String, userName : String?)
     func didLostUser(userID : String)
     
-    //errors 
+    //errors
     func failedToStartBrowsingForUsers(error : Error)
     func failedToStartAdvertising(error : Error)
     
-    //messages 
+    //messages
     func didReceiveMessage(text: String, fromUser: String, toUser: String)
 }
 
