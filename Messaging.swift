@@ -25,9 +25,9 @@ class MultipeerCommunicator : NSObject, Communicator {
     var advertiser : MCNearbyServiceAdvertiser
     var browser : MCNearbyServiceBrowser
     
-    var sessionsList : [MCSession]? = nil
+    var sessionsList : [String : MCSession]? = nil
     
-    var _online : Bool = false
+    var _online : Bool = true
     var _delegate : CommunicatorDelegate?
     
     override init() {
@@ -42,7 +42,7 @@ class MultipeerCommunicator : NSObject, Communicator {
         browser.delegate = self
         browser.startBrowsingForPeers()
         
-        online = true
+        _online = true
     }
     
     deinit {
@@ -53,12 +53,15 @@ class MultipeerCommunicator : NSObject, Communicator {
     func sendMessage(string: String, to userID: String, completionHandler:
         ((_ success : Bool, _ error: Error?) -> ())?) {
         let message = ["eventType": "TextMessage", "messageId": generateMessageId(), "text": string]
-        var rawData : Data? = nil
-        do {
-            rawData = try JSONSerialization.data(withJSONObject: message, options: .prettyPrinted)
-        } catch {
-        }
+        let session : MCSession? = sessionsList?[userID]
         
+        if (session != nil) && (session!.connectedPeers.count > 1) {
+            do {
+                try session?.send(string.data(using: .utf8)!, toPeers: (session?.connectedPeers)!, with: .unreliable)
+            } catch let error {
+                error
+            }
+        }
     }
     
     weak var delegate : CommunicatorDelegate? {
@@ -98,6 +101,7 @@ extension MultipeerCommunicator : MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         NSLog("%@", "foundPeer: \(peerID)")
         self.delegate?.didFoundUser(userID: peerID.displayName, userName: info?["userName"])
+        
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
@@ -117,7 +121,7 @@ class CommunicationManager : CommunicatorDelegate {
     var contactList : [String : String?]? = nil
     
     func didReceiveMessage(text: String, fromUser: String, toUser: String) {
-        
+        contactListViewController?.showAlertWithText("Ого, сообщение!!! Текст сообщения: \(text)")
     }
     
     func failedToStartAdvertising(error: Error) {
