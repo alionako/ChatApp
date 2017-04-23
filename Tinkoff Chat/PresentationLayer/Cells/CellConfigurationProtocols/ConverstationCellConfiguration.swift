@@ -15,7 +15,3 @@ protocol ConverstationCellConfiguration : class {
     var online: Bool {get set}
     var hasUnreadMessages: Bool {get set}
 }
-
-protocol MessageCellCofiguration : class {
-    var txt: String? {get set}
-}

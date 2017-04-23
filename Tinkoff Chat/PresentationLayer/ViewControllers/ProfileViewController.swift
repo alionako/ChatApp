@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var colorLabel: UILabel!
     @IBOutlet var toolBar: UIToolbar!
@@ -20,44 +20,27 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     @IBOutlet weak var operationButton: UIButton!
     
     
-    private var data : [String: AnyObject] = [:]
-    var dataToSave : [String: AnyObject] {
+    private var data : UserData? = UserData.init()
+    var dataToSave : UserData? {
         get {
             return self.data
         }
         set {
             self.data = newValue
-            if (newValue.count > 0) {
+            if newValue != nil {
                 self.enableButtons(enable: true)
             }
         }
     }
     
-    private var image : UIImage? = nil
-    var imageToSave : UIImage? {
-        get {
-            return self.image
-        }
-        set {
-            self.image = newValue
-            if (newValue != nil) {
-                self.enableButtons(enable: true)
-            }
-        }
-    }
+    lazy var operationDataManager: OperationDataManager = self.initOperationDataManager()
     
+    func initOperationDataManager() -> OperationDataManager {
+        return OperationDataManager().newOperation(vc: self, queueQOS: .userInitiated)
+    }
+
     // MARK - ViewController lifecycle
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print(#function)
-        print(self.view.subviews)
-    }
-    
     override func viewDidLoad() {
-        
-        super.viewDidLoad()
-        print(#function)
-        print(self.view.subviews)
         
         let tapGesture = UITapGestureRecognizer(target: self, action:#selector(self.onTapAction))
         view.addGestureRecognizer(tapGesture)
@@ -68,66 +51,29 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     }
     
     func getSavedData() {
-        let imgFunction = { image in
-            self.userPic.image = image
-        }
-        let dataFunction : ([String: AnyObject]?) -> () = { data in
+        let dataFunction : (UserData?) -> () = { data in
             guard data != nil else { return }
-            if data?[NAME_KEY] as? String != nil {
-                self.name.text = data![NAME_KEY] as? String
+            if data?.name != nil {
+                self.name.text = data?.name
             }
-            if data?[ABOUT_KEY] as? String != nil {
-                self.about.text = data![ABOUT_KEY] as! String
+            if data?.about != nil {
+                self.about.text = data?.about
             }
-            if data?[COLOR_KEY] as? [Float] != nil {
-                let colorSettings = data![COLOR_KEY] as! [Float]
-                self.colorLabel.textColor = UIColor.init(colorLiteralRed: colorSettings[0], green: colorSettings[1], blue: colorSettings[2], alpha: colorSettings[3])
+            if data?.color != nil {
+                let color = data!.color!
+                self.colorLabel.textColor = ColorHelper.getColorFromStruct(color)
+            }
+            if data?.image != nil {
+                self.userPic.image = data?.image
             }
         }
-        GCDDataManager().retrieveData(setImageFunction: imgFunction, setDataFunction: dataFunction)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print(#function)
-        print(self.view.subviews)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        print(#function)
-        print(self.view.subviews)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        print(#function)
-        print(self.view.subviews)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        print(#function)
-        print(self.view.subviews)
+        self.operationDataManager.retrieveData(setDataFunction: dataFunction)
     }
     
     // MARK - Hide keyboard
     
     func onTapAction() {
         view.endEditing(true)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.onTapAction()
-        dataToSave[NAME_KEY] = textField.text as AnyObject?
-        return true;
-    }
-    
-    // MARK - Text view delegate
-    
-    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        textView.inputAccessoryView = toolBar
-        return true
     }
     
     // MARK - Button actions
@@ -146,32 +92,31 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
             self.enableButtons(enable: false)
         }
         let success = {
-            self.dataToSave = [:]
-            self.imageToSave = nil
+            self.dataToSave = UserData.init()
             self.enableButtons(enable: false)
             self.indicator.stopAnimating()
             self.showSaveSuccessAlert()
         }
         switch ((button.titleLabel?.text)!) {
         case "GCD":
+            preparationAction()
             let failure = { () in
                 self.indicator.stopAnimating()
                 self.showSaveFailureAlert(failureHandler: {
                     self.saveButtonAction(sender)
                 })
             }
-            GCDDataManager().saveData(data: self.data, withImage: self.imageToSave, preparation: preparationAction, success: success, failure: failure)
+            GCDDataManager().saveData(data: self.data, success: success, failure: failure)
             break
         case "Operation":
+            preparationAction()
             let failure = { () in
                 self.indicator.stopAnimating()
                 self.showSaveFailureAlert(failureHandler: {
                     self.saveButtonAction(sender)
                 })
             }
-            let operationDataManager = OperationDataManager()
-            operationDataManager.viewController = self
-            operationDataManager.saveData(data: self.data, withImage: self.imageToSave, preparation: preparationAction, success: success, failure: failure)
+            self.operationDataManager.saveData(data: self.data, success: success, failure: failure)
             break
         default:
             break
@@ -186,7 +131,7 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     
     @IBAction func changeLabelColor(_ sender: UIButton) {
         self.colorLabel.textColor = sender.backgroundColor
-        dataToSave[COLOR_KEY] = ColorHelper.getColorArray(sender.backgroundColor) as AnyObject?
+        dataToSave?.color = ColorHelper.getColorStruct(sender.backgroundColor)
     }
     
     @IBAction func selectPicture(_ sender: UITapGestureRecognizer) {
@@ -209,7 +154,7 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
             let delete = UIAlertAction(title: "Удалить", style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
                 self.userPic.image = UIImage.init(named: "UserIconPlaceholder")
-                self.imageToSave = self.userPic.image
+                self.dataToSave?.image = self.userPic.image
             })
             actionSheet.addAction(delete)
         }
@@ -217,7 +162,7 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     }
     
     @IBAction func finishedEditingTextView(_ sender: UIBarButtonItem) {
-        dataToSave[ABOUT_KEY] = about.text as AnyObject?
+        dataToSave?.about = about.text
         self.onTapAction()
     }
     
@@ -225,7 +170,7 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
                                didFinishPickingMediaWithInfo info: [String : Any]){
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             userPic.image = pickedImage
-            imageToSave = pickedImage
+            dataToSave?.image = pickedImage
         }
         self.dismiss(animated: true, completion: nil)
     }
@@ -251,5 +196,53 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
             failureHandler()
         }))
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension ProfileViewController : UITextViewDelegate {
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        textView.inputAccessoryView = toolBar
+        return true
+    }
+}
+
+extension ProfileViewController : UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.onTapAction()
+        dataToSave?.name = textField.text
+        return true;
+    }
+}
+
+extension ProfileViewController {
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        printInfo(function: #function, views: self.view.subviews)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        printInfo(function: #function, views: self.view.subviews)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        printInfo(function: #function, views: self.view.subviews)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        printInfo(function: #function, views: self.view.subviews)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        printInfo(function: #function, views: self.view.subviews)
+    }
+    
+    private func printInfo (function: Any, views: [UIView]) {
+        print(function)
+        print(views)
     }
 }
