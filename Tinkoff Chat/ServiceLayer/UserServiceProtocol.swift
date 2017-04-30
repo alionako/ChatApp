@@ -9,5 +9,5 @@
 import Foundation
 
 protocol UserServiceProtocol {
-    func fetchUsers(completionHandler: @escaping ([User]?, String?) -> Void)
+    func fetchUsers(completionHandler: @escaping ([UserStruct]?, String?) -> Void)
 }

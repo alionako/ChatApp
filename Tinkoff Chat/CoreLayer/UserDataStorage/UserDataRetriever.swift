@@ -19,12 +19,15 @@ class UserDataRetriever : UserDataRetrieverProtocol {
         
         let infoData = UserDataRetriever.getData()
         if infoData != nil {
-            result?.name = infoData![NAME_KEY] as? String
-            result?.about = infoData![ABOUT_KEY] as? String
             let color = infoData![COLOR_KEY] as? [CGFloat]
             if color != nil {
                 result?.color = ColorHelper.getColorStructFromArray(color!)
             }
+        }
+        
+        if let currentUser = (StorageManager.getAppUser())?.currentUser {
+            result?.name = currentUser.name
+            result?.about = currentUser.about
         }
         
         result?.image = UserDataRetriever.getImage()

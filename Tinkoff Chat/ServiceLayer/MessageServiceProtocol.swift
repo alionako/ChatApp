@@ -8,20 +8,20 @@
 
 import Foundation
 
-struct User {
+struct UserStruct {
     let name: String?
     let online: Bool?
 }
 
-struct Message {
+struct MessageStruct {
     let text: String?
-    let user: User?
+    let user: UserStruct?
     let date: Date?
     let new: Bool?
 }
 
 protocol MessageServiceProtocol {
-    func loadMessages(fromUser: User, completionHandler: @escaping ([Message]?, String?) -> Void)
-    func sendMessage(message: Message, completionHandler: @escaping (Bool, String?) -> Void)
-    func receiveMessage(completionHandler: @escaping (Message, String?) -> Void)
+    func loadMessages(fromUser: UserStruct, completionHandler: @escaping ([MessageStruct]?, String?) -> Void)
+    func sendMessage(message: MessageStruct, completionHandler: @escaping (Bool, String?) -> Void)
+    func receiveMessage(completionHandler: @escaping (MessageStruct, String?) -> Void)
 }

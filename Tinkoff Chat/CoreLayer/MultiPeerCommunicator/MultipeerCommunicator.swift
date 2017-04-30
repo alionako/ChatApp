@@ -44,7 +44,7 @@ class MultipeerCommunicator : NSObject, Communicator {
     
     func sendMessage(string: String, to userID: String, completionHandler:
         ((_ success : Bool, _ error: Error?) -> ())?) {
-        let message = ["eventType": "TextMessage", "messageId": MessageIdGenerator.generateMessageId(), "text": string]
+        _ = ["eventType": "TextMessage", "messageId": MessageIdGenerator.generateMessageId(), "text": string]
         let session : MCSession? = sessionsList?[userID]
         
         if (session != nil) && (session!.connectedPeers.count > 1) {
