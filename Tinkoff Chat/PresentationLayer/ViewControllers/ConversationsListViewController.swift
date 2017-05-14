@@ -7,20 +7,19 @@
 //
 
 import UIKit
+import CoreData
 
 class ConversationsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var contactTable: UITableView!
     
     var contactList : [String : String?]?
+    var dataProvider : DataProvider?
     
     var communicator : MultipeerCommunicator? = nil
     var communicationManager : CommunicationManager? = nil
     
     override func viewDidLoad() {
-        if contactList == nil {
-            contactList = [:]
-        }
         if communicator == nil {
             communicator = MultipeerCommunicator()
         }
@@ -29,25 +28,30 @@ class ConversationsListViewController: UIViewController, UITableViewDelegate, UI
             communicationManager?.contactListViewController = self
         }
         communicator?.delegate = communicationManager
+        dataProvider = DataProvider(tableView: contactTable)
     }
     
     // MARK - Tableview
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contactList!.count
+        guard let sections = dataProvider?.fetchedResultsController.sections else {
+            return 0
+        }
+        return sections[section].numberOfObjects
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        guard let sectionsCount = dataProvider?.fetchedResultsController.sections?.count else {
+            return 0
+        }
+        return sectionsCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell:MessagePreviewCell = tableView.dequeueReusableCell(withIdentifier: "MessagePreviewCell") as! MessagePreviewCell
         
-        let index = indexPath.row
-        let key = [String](contactList!.keys)[index]
-        cell.chatName.text = contactList![key]!
-        
+        if let user = dataProvider?.fetchedResultsController.object(at: indexPath) {
+            cell.configure(withUser: user)
+        }
         return cell
     }
     

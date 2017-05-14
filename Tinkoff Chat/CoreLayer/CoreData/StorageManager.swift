@@ -20,11 +20,54 @@ class StorageManager {
         }
     }
     
+    static func getContext() -> NSManagedObjectContext? {
+        if let context = self.coreDataStack?.saveContext {
+            return context
+        }
+        return nil
+    }
+    
+    static func save(completion: Void) {
+        if let context = self.coreDataStack?.saveContext, let coreDataStack = self.coreDataStack {
+            coreDataStack.performSave(context: context, completionHandler: {
+                print ("Saved results!")
+                completion
+            })
+        } else {
+            print ("Save failure!")
+            completion
+        }
+    }
+    
     static func getAppUser() -> AppUser? {
         if let context = self.coreDataStack?.saveContext {
             return self.findOrInsertAppUser(in:context)
         }
         return nil
+    }
+    
+    static func getOnlineUsers() -> [User]? {
+        
+        guard let context = StorageManager.coreDataStack?.saveContext else {
+            return nil 
+        }
+        guard let model = context.persistentStoreCoordinator?.managedObjectModel else {
+            print("Model is not available in context!")
+            assert (false)
+            return nil
+        }
+        var onlineUsers : [User]?
+        guard let fetchRequest = User.fetchRequestOnlineUsers(model: model) else {
+            return nil
+        }
+        
+        do {
+            onlineUsers = try context.fetch(fetchRequest)
+        } catch {
+            print("Failed to fetch online users \(error)")
+        }
+        
+        return onlineUsers
     }
     
     static func findOrInsertAppUser(in context: NSManagedObjectContext) -> AppUser? {

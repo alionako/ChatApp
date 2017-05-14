@@ -90,4 +90,9 @@ class MessagePreviewCell : UITableViewCell, ConverstationCellConfiguration {
             }
         }
     }
+    
+    func configure(withUser: User) {
+        online = withUser.isOnline
+        name = withUser.name
+    }
 }

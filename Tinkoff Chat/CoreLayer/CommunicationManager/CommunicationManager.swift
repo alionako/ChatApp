@@ -11,7 +11,6 @@ import Foundation
 class CommunicationManager : CommunicatorDelegate {
     
     var contactListViewController : ConversationsListViewController? = nil
-    var contactList : [String : String?]? = nil
     
     func didReceiveMessage(text: String, fromUser: String, toUser: String) {
         contactListViewController?.showAlertWithText("Ого, сообщение!!! Текст сообщения: \(text)")
@@ -26,13 +25,21 @@ class CommunicationManager : CommunicatorDelegate {
     }
     
     func didLostUser(userID: String) {
-        contactList?.removeValue(forKey: userID)
-        contactListViewController?.contactTable.reloadData()
+//        contactListViewController?.dataProvider?.fetchedResultsController.setValue(<#T##value: Any?##Any?#>, forKeyPath: <#T##String#>)
+//        contactList?.removeValue(forKey: userID)
+//        contactListViewController?.contactTable.reloadData()
     }
     
     func didFoundUser(userID: String, userName: String?) {
-        contactList = [userID : userName]
-        contactListViewController?.contactList = contactList!
-        contactListViewController?.contactTable.reloadData()
+        let _ = User.saveUser(id: userID, name: userName!, completion: self.updateResults())
+    }
+    
+    func updateResults() {
+        do {
+            try contactListViewController?.dataProvider?.fetchedResultsController.performFetch()
+        } catch {
+            print("Failed to perform fetch")
+        }
+        contactListViewController?.dataProvider?.fetchResults()
     }
 }
