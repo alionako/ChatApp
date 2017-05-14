@@ -150,6 +150,12 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         })
         actionSheet.addAction(chooseFromLibrary)
         
+        let loadImage = UIAlertAction(title: "Загрузить", style: .default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            self.showPhotosController()
+        })
+        actionSheet.addAction(loadImage)
+        
         if userPic.image != UIImage.init(named: "UserIconPlaceholder") {
             let delete = UIAlertAction(title: "Удалить", style: .default, handler: {
                 (alert: UIAlertAction!) -> Void in
@@ -181,6 +187,12 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         imagePicker.allowsEditing = false
         imagePicker.sourceType = source
         self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    private func showPhotosController() {
+        let storyboard = UIStoryboard(name: "ImagePicker", bundle: nil)
+        let controller = storyboard.instantiateInitialViewController()!
+        self.present(controller, animated: true, completion: nil)
     }
     
     func showSaveSuccessAlert() {

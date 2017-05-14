@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="EQr-Am-TIl">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Выбрать картинку-->
+        <scene sceneID="E3t-0H-llv">
+            <objects>
+                <viewController id="FQM-5x-zmf" customClass="ImagePickerViewController" customModule="Tinkoff_Chat" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="6RU-qk-McJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="N2b-VR-G6k"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="eyt-tP-S7N">
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" indicatorStyle="black" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Gx6-Gu-QNh">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="wyl-dE-QTc">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="PhotoCell" id="JfG-ZS-R86" customClass="PhotoCell" customModule="Tinkoff_Chat" customModuleProvider="target">
+                                        <rect key="frame" x="10" y="10" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ImagePlaceHolder" translatesAutoresizingMaskIntoConstraints="NO" id="nNq-xy-YAy">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <color key="backgroundColor" red="0.99653333430000002" green="0.88247770069999998" blue="0.2214236856" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="nNq-xy-YAy" firstAttribute="leading" secondItem="JfG-ZS-R86" secondAttribute="leading" id="4OR-E9-I9Y"/>
+                                            <constraint firstAttribute="trailing" secondItem="nNq-xy-YAy" secondAttribute="trailing" id="H4Q-1b-glA"/>
+                                            <constraint firstItem="nNq-xy-YAy" firstAttribute="top" secondItem="JfG-ZS-R86" secondAttribute="top" id="WVD-Cg-Waw"/>
+                                            <constraint firstAttribute="bottom" secondItem="nNq-xy-YAy" secondAttribute="bottom" id="u9Z-XT-RYO"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="imageView" destination="nNq-xy-YAy" id="6Pn-SI-bZP"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="FQM-5x-zmf" id="wTy-fn-K2A"/>
+                                    <outlet property="delegate" destination="FQM-5x-zmf" id="pY8-nv-4bi"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Gx6-Gu-QNh" firstAttribute="top" secondItem="6RU-qk-McJ" secondAttribute="bottom" id="64R-Qw-8tJ"/>
+                            <constraint firstItem="N2b-VR-G6k" firstAttribute="top" secondItem="Gx6-Gu-QNh" secondAttribute="bottom" id="BUL-aP-En8"/>
+                            <constraint firstItem="Gx6-Gu-QNh" firstAttribute="leading" secondItem="eyt-tP-S7N" secondAttribute="leading" id="ZZe-oX-J7Z"/>
+                            <constraint firstAttribute="trailing" secondItem="Gx6-Gu-QNh" secondAttribute="trailing" id="cUT-52-m2f"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Выбрать картинку" id="9VY-aM-ut1">
+                        <barButtonItem key="rightBarButtonItem" title="Отмена" id="4mM-Eg-hpT">
+                            <connections>
+                                <action selector="cancelButtomPress:" destination="FQM-5x-zmf" id="nhp-Vf-sZi"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="picCollection" destination="Gx6-Gu-QNh" id="0yd-YB-STo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Knx-ag-EgN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="888.79999999999995" y="47.226386806596707"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="yIt-3p-LhQ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="EQr-Am-TIl" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="RFE-XP-rbB">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="FQM-5x-zmf" kind="relationship" relationship="rootViewController" id="RzB-zL-Jp1"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tTr-F4-Jsy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-50.399999999999999" y="47.226386806596707"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="ImagePlaceHolder" width="600" height="450"/>
+    </resources>
+</document>
