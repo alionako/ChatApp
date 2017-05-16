@@ -7,6 +7,7 @@
 //
 
 import CoreData
+import UIKit
 
 class StorageManager {
     
@@ -42,6 +43,31 @@ class StorageManager {
     static func getAppUser() -> AppUser? {
         if let context = self.coreDataStack?.saveContext {
             return self.findOrInsertAppUser(in:context)
+        }
+        return nil
+    }
+    
+    static func getImageForUserWithId(_ userId: String?) -> UIImage? {
+        if let id = userId, let context = self.coreDataStack?.saveContext {
+            guard let model = context.persistentStoreCoordinator?.managedObjectModel else {
+                print("Model is not available in context!")
+                assert (false)
+                return nil
+            }
+            guard let fetchRequest = User.fetchRequestUserImage(model: model, userId: id) else {
+                return nil
+            }
+            
+            do {
+                let results = try context.fetch(fetchRequest)
+                if let foundImage = results.first {
+                    if let userImageData = foundImage.content {
+                        return UIImage(data: userImageData as Data)
+                    }
+                }
+            } catch {
+                print("Failed to fetch UserImage \(error)")
+            }
         }
         return nil
     }
@@ -98,16 +124,50 @@ class StorageManager {
         return appUser
     }
     
+    static func createOrUpdateImage(_ inContext: NSManagedObjectContext, forUserId: String, img: UIImage) -> Image? {
+        guard let model = inContext.persistentStoreCoordinator?.managedObjectModel else {
+            print("Model is not available in context!")
+            assert (false)
+            return nil
+        }
+        var userImage : Image?
+        guard let fetchRequest = User.fetchRequestUserImage(model: model, userId: forUserId) else {
+            return nil
+        }
+        
+        do {
+            let results = try inContext.fetch(fetchRequest)
+            if let foundImage = results.first {
+                userImage = foundImage
+            }
+        } catch {
+            print("Failed to fetch UserImage \(error)")
+        }
+        
+        if userImage == nil {
+            userImage = User.insertImage(in: inContext, forUserId: forUserId)
+        }
+        
+        userImage?.content = UIImagePNGRepresentation(img) as NSData?
+        
+        return userImage
+    }
+    
     static func saveUserData(_ data: UserData?, success: Void) {
         if let saveContext = StorageManager.coreDataStack?.saveContext {
             if let appUser = (StorageManager.findOrInsertAppUser(in: saveContext))?.currentUser {
+                print ("\(appUser)")
                 if let name = data?.name {
                     appUser.name = name
                 }
                 if let about = data?.about {
                     appUser.about = about
                 }
-                StorageManager.coreDataStack?.performSave(context: (self.coreDataStack?.saveContext)!, completionHandler: {success})
+                if  let image = data?.image,
+                    let userId = appUser.userId {
+                    let _ = StorageManager.createOrUpdateImage(saveContext, forUserId: userId, img: image)
+                }
+                StorageManager.coreDataStack?.performSave(context: saveContext, completionHandler: {success})
             } else {
                 print("Failed to get user")
             }

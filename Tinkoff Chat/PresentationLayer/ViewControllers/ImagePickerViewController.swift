@@ -42,7 +42,17 @@ extension ImagePickerViewController : UICollectionViewDelegate, UICollectionView
         let cell = collectionView.cellForItem(at: indexPath) as! PhotoCell
         var dataToSave = UserData.init()
         dataToSave.image = cell.imageView.image
-        GCDDataManager().saveData(data: dataToSave, success: {self.dismiss(animated: true, completion: nil)}, failure: {})
+        GCDDataManager().saveData(data: dataToSave, success: {self.imageSaveSuccess()}, failure: {})
+    }
+    
+    private func imageSaveSuccess() {
+        if let controllersCount = navigationController?.viewControllers.count {
+            if controllersCount > 1 {
+                let profileViewController = navigationController?.viewControllers[controllersCount - 2] as! ProfileViewController
+                profileViewController.getSavedData()
+            }
+        }
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

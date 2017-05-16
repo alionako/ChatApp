@@ -19,14 +19,14 @@ extension User {
     }
     
     
-    static func findOrInsertUser(with: String, in context: NSManagedObjectContext) -> User? {
+    static func findOrInsertUser(withId: String, in context: NSManagedObjectContext) -> User? {
         guard let model = context.persistentStoreCoordinator?.managedObjectModel else {
             print("Model is not available in context!")
             assert (false)
             return nil
         }
         var user : User?
-        guard let fetchRequest = User.fetchRequestUserById(model: model, id: with) else {
+        guard let fetchRequest = User.fetchRequestUserById(model: model, id: withId) else {
             return nil
         }
         
@@ -41,15 +41,18 @@ extension User {
         }
         
         if user == nil {
-            user = User.insertAppUser(in: context)
+            user = User.insertAppUser(in: context, id: withId)
         }
         
         return user
     }
     
-    static func insertAppUser(in context: NSManagedObjectContext) -> User? {
+    static func insertAppUser(in context: NSManagedObjectContext, id: String) -> User? {
         let user = NSEntityDescription.insertNewObject(forEntityName: "User", into: context) as? User
         user?.name = "Name"
+        user?.userId = id
+        let image = NSEntityDescription.insertNewObject(forEntityName: "Image", into: context) as? Image
+        image?.user = user
         return user
     }
     
@@ -69,7 +72,6 @@ extension User {
         if let fetchRequest = User.fetchRequestUserById(model: model, id: id) {
             do {
                 let results = try context.fetch(fetchRequest)
-                //assert(results.count < 2, "Multiple users found!")
                 if let foundUser = results.first {
                     user = foundUser
                     if user?.name == name && user?.isOnline == true { return foundUser }
@@ -87,6 +89,7 @@ extension User {
             user?.userId = id
             user?.isOnline = true
         }
+        
         StorageManager.save(completion: completion)
         return user
     }
@@ -100,6 +103,15 @@ extension User {
         return fetchRequest
     }
     
+    static func fetchRequestUserImage(model: NSManagedObjectModel, userId: String) -> NSFetchRequest<Image>? {
+        let templateName = "ImageForUser"
+        guard let fetchRequest = model.fetchRequestFromTemplate(withName: templateName, substitutionVariables: ["id" : userId]) as? NSFetchRequest<Image> else {
+            assert(false, "No template with name \(templateName)!")
+            return nil
+        }
+        return fetchRequest
+    }
+    
     static func fetchRequestOnlineUsers(model: NSManagedObjectModel) -> NSFetchRequest<User>? {
         let templateName = "OnlineUsers"
         guard let fetchRequest = model.fetchRequestTemplate(forName: templateName) as? NSFetchRequest<User> else {
@@ -107,6 +119,16 @@ extension User {
             return nil
         }
         return fetchRequest.copy() as? NSFetchRequest<User>
+    }
+    
+    static func insertImage(in context: NSManagedObjectContext, forUserId: String) -> Image? {
+        if let image = NSEntityDescription.insertNewObject(forEntityName: "Image", into: context) as? Image {
+            if let user = User.findOrInsertUser(withId: forUserId, in: context) {
+                image.user = user
+            }
+            return image
+        }
+        return nil
     }
  
 }

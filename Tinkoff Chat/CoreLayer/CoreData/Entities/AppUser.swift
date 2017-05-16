@@ -21,7 +21,7 @@ extension AppUser {
     static func insertAppUser(in context: NSManagedObjectContext) -> AppUser? {
         if let appUser = NSEntityDescription.insertNewObject(forEntityName: "AppUser", into: context) as? AppUser {
             if appUser.currentUser == nil {
-                let currentUser = User.findOrInsertUser(with: User.generateUserIdString(), in: context)
+                let currentUser = User.findOrInsertUser(withId: User.generateUserIdString(), in: context)
                 currentUser?.name = User.generateCurrentUserNameString()
                 appUser.currentUser = currentUser
             }

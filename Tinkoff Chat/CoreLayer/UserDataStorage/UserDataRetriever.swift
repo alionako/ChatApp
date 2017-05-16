@@ -28,9 +28,8 @@ class UserDataRetriever : UserDataRetrieverProtocol {
         if let currentUser = (StorageManager.getAppUser())?.currentUser {
             result?.name = currentUser.name
             result?.about = currentUser.about
+            result?.image = StorageManager.getImageForUserWithId(currentUser.userId)
         }
-        
-        result?.image = UserDataRetriever.getImage()
         
         return result
     }
