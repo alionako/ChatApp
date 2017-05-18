@@ -12,9 +12,8 @@ let SPACING_BETWEEN_CELLS = 10
 let CELLS_IN_ROW = 3
 
 class ImagePickerViewController : UIViewController {
+    
     @IBOutlet weak var picCollection: UICollectionView!
-    
-    
     
     @IBAction func cancelButtomPress(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
@@ -35,7 +34,21 @@ extension ImagePickerViewController : UICollectionViewDelegate, UICollectionView
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell",
                                                       for: indexPath) as! PhotoCell
+        self.uploadImageFor(cell: cell, atIndexPath: indexPath)
         return cell
+    }
+    
+    private func uploadImageFor(cell: PhotoCell, atIndexPath: IndexPath) {
+        RequestSender().send(requestNumber: atIndexPath.row) { (result: Result) in
+            switch result {
+            case .Success(let img):
+                cell.imageView.image = img
+                break
+            case .Fail(let errorDescription):
+                print ("\(errorDescription)")
+                break
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -46,12 +59,7 @@ extension ImagePickerViewController : UICollectionViewDelegate, UICollectionView
     }
     
     private func imageSaveSuccess() {
-        if let controllersCount = navigationController?.viewControllers.count {
-            if controllersCount > 1 {
-                let profileViewController = navigationController?.viewControllers[controllersCount - 2] as! ProfileViewController
-                profileViewController.getSavedData()
-            }
-        }
+        // TODO: Add here update of user image
         self.dismiss(animated: true, completion: nil)
     }
 }
