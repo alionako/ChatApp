@@ -39,11 +39,15 @@ extension ImagePickerViewController : UICollectionViewDelegate, UICollectionView
     }
     
     private func uploadImageFor(cell: PhotoCell, atIndexPath: IndexPath) {
-        RequestSender().send(requestNumber: atIndexPath.row) { (result) in
-//            if let res = result,
-//                let image = result.Success{
-//                cell.imageView.image = image
-//            }
+        RequestSender().send(requestNumber: atIndexPath.row) { (result: Result) in
+            switch result {
+            case .Success(let img):
+                cell.imageView.image = img
+                break
+            case .Fail(let errorDescription):
+                print ("\(errorDescription)")
+                break
+            }
         }
     }
     
