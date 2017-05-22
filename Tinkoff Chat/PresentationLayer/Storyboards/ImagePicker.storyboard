@@ -12,7 +12,7 @@
         <!--Выбрать картинку-->
         <scene sceneID="E3t-0H-llv">
             <objects>
-                <viewController id="FQM-5x-zmf" customClass="ImagePickerViewController" customModule="Tinkoff_Chat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImagePickerViewControllerId" id="FQM-5x-zmf" customClass="ImagePickerViewController" customModule="Tinkoff_Chat" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6RU-qk-McJ"/>
                         <viewControllerLayoutGuide type="bottom" id="N2b-VR-G6k"/>
@@ -87,6 +87,7 @@
         <!--Navigation Controller-->
         <scene sceneID="yIt-3p-LhQ">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tTr-F4-Jsy" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="EQr-Am-TIl" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="RFE-XP-rbB">
@@ -100,7 +101,6 @@
                         <segue destination="FQM-5x-zmf" kind="relationship" relationship="rootViewController" id="RzB-zL-Jp1"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tTr-F4-Jsy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-50.399999999999999" y="47.226386806596707"/>
         </scene>

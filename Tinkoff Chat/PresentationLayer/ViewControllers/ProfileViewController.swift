@@ -191,8 +191,10 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     private func showPhotosController() {
         let storyboard = UIStoryboard(name: "ImagePicker", bundle: nil)
-        let controller = storyboard.instantiateInitialViewController()!
-        self.present(controller, animated: true, completion: nil)
+        let navigationController = storyboard.instantiateInitialViewController()
+        let controller = navigationController?.childViewControllers[0] as! ImagePickerViewController
+        controller.delegate = self
+        self.present(navigationController!, animated: true, completion: nil)
     }
     
     func showSaveSuccessAlert() {
