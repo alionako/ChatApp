@@ -31,7 +31,7 @@ class CommunicationManager : CommunicatorDelegate {
     }
     
     func didFoundUser(userID: String, userName: String?) {
-        let _ = User.saveUser(id: userID, name: userName!, completion: self.updateResults())
+        let _ = User.saveUser(id: userID, name: userID, completion: self.updateResults())
     }
     
     func updateResults() {

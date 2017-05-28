@@ -76,6 +76,7 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="sIc-o2-VVs" firstAttribute="top" secondItem="Veg-j9-e7Z" secondAttribute="bottom" id="Bbb-69-3h5"/>
                             <constraint firstItem="Veg-j9-e7Z" firstAttribute="top" secondItem="uvH-4h-f9x" secondAttribute="top" id="If6-nz-g0N"/>

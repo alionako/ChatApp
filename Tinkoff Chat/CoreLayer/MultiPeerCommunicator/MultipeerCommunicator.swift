@@ -11,7 +11,7 @@ import MultipeerConnectivity
 class MultipeerCommunicator : NSObject, Communicator {
     
     let serviceType : String = "tinkoff-chat"
-    let discoveryInfo : [String : String]? = ["userName" : "Aliona"]
+    var discoveryInfo : [String : String]? = nil
     let peerID = MCPeerID(displayName: UIDevice.current.name)
     
     var advertiser : MCNearbyServiceAdvertiser
@@ -19,20 +19,27 @@ class MultipeerCommunicator : NSObject, Communicator {
     
     var sessionsList : [String : MCSession]? = nil
     
-    var _online : Bool = true
+    var _online : Bool = false
     var _delegate : CommunicatorDelegate?
     
     override init() {
+        
+        if let appUserName = StorageManager.getAppUser()?.currentUser?.name {
+            discoveryInfo = ["userName" : appUserName]
+        } else {
+            discoveryInfo = ["userName" : ""]
+        }
+        
+        browser = MCNearbyServiceBrowser(peer: peerID, serviceType: serviceType)
         advertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
-        browser = MCNearbyServiceBrowser(peer: MCPeerID(displayName: UIDevice.current.name), serviceType: serviceType)
         
         super.init()
         
-        advertiser.delegate = self
-        advertiser.startAdvertisingPeer()
-        
         browser.delegate = self
         browser.startBrowsingForPeers()
+        
+        advertiser.delegate = self
+        advertiser.startAdvertisingPeer()
         
         _online = true
     }

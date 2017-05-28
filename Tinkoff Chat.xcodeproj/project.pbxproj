@@ -44,6 +44,7 @@
 		96B083D91ECCEE5400BEB423 /* IRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B083D81ECCEE5400BEB423 /* IRequest.swift */; };
 		96B083DC1ECCF4B700BEB423 /* RequestSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B083DB1ECCF4B700BEB423 /* RequestSender.swift */; };
 		96B083DE1ECD04CE00BEB423 /* IRequestSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B083DD1ECD04CE00BEB423 /* IRequestSender.swift */; };
+		96B083E01ED9E3EA00BEB423 /* LogoEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96B083DF1ED9E3EA00BEB423 /* LogoEmitter.swift */; };
 		96DB9D651E8592890086E0C4 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DB9D641E8592890086E0C4 /* ConversationsListViewController.swift */; };
 		96DB9D681E86F35D0086E0C4 /* MessagePreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DB9D671E86F35C0086E0C4 /* MessagePreviewCell.swift */; };
 		96DB9D6A1E87BC200086E0C4 /* ConverstationCellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DB9D691E87BC200086E0C4 /* ConverstationCellConfiguration.swift */; };
@@ -92,6 +93,7 @@
 		96B083D81ECCEE5400BEB423 /* IRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IRequest.swift; path = NetworkLayer/Requests/IRequest.swift; sourceTree = "<group>"; };
 		96B083DB1ECCF4B700BEB423 /* RequestSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestSender.swift; sourceTree = "<group>"; };
 		96B083DD1ECD04CE00BEB423 /* IRequestSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IRequestSender.swift; path = NetworkLayer/IRequestSender.swift; sourceTree = "<group>"; };
+		96B083DF1ED9E3EA00BEB423 /* LogoEmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoEmitter.swift; sourceTree = "<group>"; };
 		96DB9D641E8592890086E0C4 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
 		96DB9D671E86F35C0086E0C4 /* MessagePreviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagePreviewCell.swift; sourceTree = "<group>"; };
 		96DB9D691E87BC200086E0C4 /* ConverstationCellConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConverstationCellConfiguration.swift; sourceTree = "<group>"; };
@@ -329,12 +331,21 @@
 			name = Requests;
 			sourceTree = "<group>";
 		};
+		96B083E11ED9E3F200BEB423 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				96B083DF1ED9E3EA00BEB423 /* LogoEmitter.swift */,
+			);
+			name = Animation;
+			sourceTree = "<group>";
+		};
 		96DB9D661E85929E0086E0C4 /* PresentationLayer */ = {
 			isa = PBXGroup;
 			children = (
 				962B6F841E8AE0E500D3CEC6 /* Cells */,
 				968B55351EACE75700DFE90C /* Storyboards */,
 				96898BD41EABABC200C395AF /* ViewControllers */,
+				96B083E11ED9E3F200BEB423 /* Animation */,
 			);
 			path = PresentationLayer;
 			sourceTree = "<group>";
@@ -424,6 +435,7 @@
 				967432871EA54B7C00CA78B3 /* MessageCellConfiguration.swift in Sources */,
 				9674327D1EA54A3600CA78B3 /* OperationDataManager.swift in Sources */,
 				96B083D91ECCEE5400BEB423 /* IRequest.swift in Sources */,
+				96B083E01ED9E3EA00BEB423 /* LogoEmitter.swift in Sources */,
 				96DB9D6A1E87BC200086E0C4 /* ConverstationCellConfiguration.swift in Sources */,
 				966058641EB680E300C82071 /* User.swift in Sources */,
 				96DB9D6C1E87BCD80086E0C4 /* ConversationViewController.swift in Sources */,

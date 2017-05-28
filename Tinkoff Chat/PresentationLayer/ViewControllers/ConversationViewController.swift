@@ -10,9 +10,13 @@ import UIKit
 
 class ConversationViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
+    @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var table: UITableView!
+    
     var dataSource : [String]?
     var frame : CGRect?
+    
+    var titleLabel : UILabel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,8 +25,14 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
         self.table.estimatedRowHeight = 100
         
         frame = self.view.frame
+        self.navigationItem.backBarButtonItem?.title = ""
         
         self.dataSource = [" ", "Сообщение номер 2", "Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение"]
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+            self.animateButton()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -49,6 +59,7 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         self.view.frame = CGRect.init(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height - 300)
+
         return true
     }
     
@@ -58,4 +69,46 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
         return true
     }
     
+    func animateButton() {
+        UIView.transition(with: sendButton,
+                                  duration: 0.5,
+                                  options: .curveEaseInOut,
+                                  animations: {
+                                    self.sendButton.isEnabled = true
+                                    self.sendButton.transform = CGAffineTransform(scaleX: 1.15, y: 1.15)
+                                    },
+                                  completion: { Void in
+                                    self.sendButton.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                                    })
+    }
+    
+    func animateTitle() {
+        if titleLabel == nil {
+            let title = self.navigationItem.title
+            titleLabel = UILabel()
+            titleLabel?.text = title
+            titleLabel?.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width/2, height:100)
+            self.navigationItem.titleView = titleLabel
+        }
+        if titleLabel?.textColor == UIColor.green {
+            self.titleAnimation(color: UIColor.black, scale: 1.0, options: .curveEaseOut)
+        } else {
+            self.titleAnimation(color: UIColor.green, scale: 1.1, options: .curveEaseIn)
+        }
+    }
+    
+    func titleAnimation(color : UIColor, scale: CGFloat, options: UIViewAnimationOptions) {
+        UIView.transition(with: self.titleLabel!,
+                          duration: 1.0,
+                          options: options,
+                          animations: {
+                            self.titleLabel?.textColor = color
+                            self.titleLabel?.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }, completion: nil)
+    }
+    
+    @IBAction func handleTap(_ sender: UITapGestureRecognizer) {
+        self.animateTitle()
+        LogoEmitter.emitLogos(self.view, recognizer: sender)
+    }
 }

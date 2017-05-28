@@ -26,7 +26,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="617"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageBubbleCell" rowHeight="100" id="TZG-1g-dmt" customClass="MessageBubbleCell" customModule="Tinkoff_Chat" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="MessageBubbleCell" rowHeight="100" id="TZG-1g-dmt" customClass="MessageBubbleCell" customModule="Tinkoff_Chat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TZG-1g-dmt" id="Xys-x2-gdG">
@@ -64,7 +64,7 @@
                                             <outlet property="label" destination="h3L-DK-6je" id="TUr-lT-Q1J"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MyMessageBubbleCell" id="uey-W3-bhV" customClass="MessageBubbleCell" customModule="Tinkoff_Chat" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="MyMessageBubbleCell" id="uey-W3-bhV" customClass="MessageBubbleCell" customModule="Tinkoff_Chat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="128" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uey-W3-bhV" id="Vvn-PD-eWO">
@@ -119,10 +119,13 @@
                                             <outlet property="delegate" destination="jGV-wR-aDs" id="miH-rR-lWS"/>
                                         </connections>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWX-Bi-uCx">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWX-Bi-uCx">
                                         <rect key="frame" x="290" y="10" width="77" height="30"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="Отправить"/>
+                                        <state key="disabled">
+                                            <color key="titleColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -137,6 +140,7 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="p96-K2-xsK" firstAttribute="top" secondItem="QI1-1n-tHn" secondAttribute="bottom" id="Brj-Cp-OUz"/>
                             <constraint firstAttribute="trailing" secondItem="QI1-1n-tHn" secondAttribute="trailing" id="Z86-Cw-q1I"/>
@@ -146,12 +150,22 @@
                             <constraint firstItem="sTa-jZ-81r" firstAttribute="top" secondItem="p96-K2-xsK" secondAttribute="bottom" id="oKD-6M-JDm"/>
                             <constraint firstItem="QI1-1n-tHn" firstAttribute="leading" secondItem="MCE-ir-LCb" secondAttribute="leading" id="sw5-BZ-NPZ"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="cBP-IA-msP" appends="YES" id="zeP-iC-Xrm"/>
+                        </connections>
                     </view>
                     <connections>
+                        <outlet property="sendButton" destination="WWX-Bi-uCx" id="7c1-X0-SFd"/>
                         <outlet property="table" destination="QI1-1n-tHn" id="FqP-Tk-nfz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c7n-VH-Na0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="cBP-IA-msP">
+                    <connections>
+                        <action selector="handleTap:" destination="jGV-wR-aDs" id="PZ1-AT-9T2"/>
+                        <outlet property="delegate" destination="jGV-wR-aDs" id="iVZ-Fg-Zlo"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2442.4000000000001" y="1015.1424287856073"/>
         </scene>

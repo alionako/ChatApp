@@ -157,13 +157,17 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         actionSheet.addAction(loadImage)
         
         if userPic.image != UIImage.init(named: "UserIconPlaceholder") {
-            let delete = UIAlertAction(title: "Удалить", style: .default, handler: {
+            let delete = UIAlertAction(title: "Удалить", style: .destructive, handler: {
                 (alert: UIAlertAction!) -> Void in
                 self.userPic.image = UIImage.init(named: "UserIconPlaceholder")
                 self.dataToSave?.image = self.userPic.image
             })
             actionSheet.addAction(delete)
         }
+        
+        let cancel = UIAlertAction(title: "Отмена", style: .cancel)
+        actionSheet.addAction(cancel)
+        
         self.present(actionSheet, animated: true, completion: nil)
     }
     
@@ -171,6 +175,11 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         dataToSave?.about = about.text
         self.onTapAction()
     }
+    
+    @IBAction func emitLogos(_ sender: UITapGestureRecognizer) {
+        LogoEmitter.emitLogos(self.view, recognizer: sender)
+    }
+    
     
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [String : Any]){
