@@ -38,6 +38,8 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
         dataProvider = ChatDataProvider(tableView: table, conversationId: opponent!)
     }
     
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.animateTitle(connected: true)
@@ -108,7 +110,6 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
             } else {
                 print ("No success this time :(")
             }
-            Message.saveMessage(userId: self.opponent!, text: text!, sentByAppUser: true, completion: self.completion())
         })
     }
     

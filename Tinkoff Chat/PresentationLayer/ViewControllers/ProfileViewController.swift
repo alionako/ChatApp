@@ -138,7 +138,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     @IBAction func selectPicture(_ sender: UITapGestureRecognizer) {
         
-        let actionSheet = UIAlertController(title: "Выбрать фото", message: nil, preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let takePhoto = UIAlertAction(title: "Сделать фото", style: .default, handler: {
             (alert: UIAlertAction!) -> Void in
