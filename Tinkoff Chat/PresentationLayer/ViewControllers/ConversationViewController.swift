@@ -111,6 +111,7 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
                 print ("No success this time :(")
             }
         })
+        Message.saveMessage(userId: self.opponent!, text: text!, sentByAppUser: true, completion: {}())
     }
     
     // MARK - Animation
