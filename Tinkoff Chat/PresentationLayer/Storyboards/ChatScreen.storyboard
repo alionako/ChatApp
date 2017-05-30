@@ -101,7 +101,7 @@
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="jGV-wR-aDs" id="K9r-pG-uwd"/>
-                                    <outlet property="delegate" destination="jGV-wR-aDs" id="zja-lE-Nxw"/>
+                                    <outlet property="delegate" destination="JA9-lq-Dxz" id="AXF-VC-pDe"/>
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p96-K2-xsK">
@@ -116,7 +116,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                         <connections>
-                                            <outlet property="delegate" destination="jGV-wR-aDs" id="miH-rR-lWS"/>
+                                            <outlet property="delegate" destination="JA9-lq-Dxz" id="Tmq-8j-7d2"/>
                                         </connections>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWX-Bi-uCx">
@@ -126,6 +126,9 @@
                                         <state key="disabled">
                                             <color key="titleColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
+                                        <connections>
+                                            <action selector="sendMessage:" destination="jGV-wR-aDs" eventType="touchUpInside" id="8d1-yh-esy"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -151,21 +154,23 @@
                             <constraint firstItem="QI1-1n-tHn" firstAttribute="leading" secondItem="MCE-ir-LCb" secondAttribute="leading" id="sw5-BZ-NPZ"/>
                         </constraints>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="cBP-IA-msP" appends="YES" id="zeP-iC-Xrm"/>
+                            <outletCollection property="gestureRecognizers" destination="JA9-lq-Dxz" appends="YES" id="DLV-bD-dNE"/>
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="bottomConstraint" destination="oKD-6M-JDm" id="QoD-9t-ToF"/>
                         <outlet property="sendButton" destination="WWX-Bi-uCx" id="7c1-X0-SFd"/>
                         <outlet property="table" destination="QI1-1n-tHn" id="FqP-Tk-nfz"/>
+                        <outlet property="textField" destination="vTg-N2-ODx" id="pI4-eX-1Md"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c7n-VH-Na0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="cBP-IA-msP">
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="JA9-lq-Dxz">
                     <connections>
-                        <action selector="handleTap:" destination="jGV-wR-aDs" id="PZ1-AT-9T2"/>
-                        <outlet property="delegate" destination="jGV-wR-aDs" id="iVZ-Fg-Zlo"/>
+                        <action selector="handleLongPress:" destination="jGV-wR-aDs" id="4NC-8W-xZj"/>
+                        <outlet property="delegate" destination="jGV-wR-aDs" id="QEP-OC-5bS"/>
                     </connections>
-                </tapGestureRecognizer>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2442.4000000000001" y="1015.1424287856073"/>
         </scene>

@@ -94,6 +94,32 @@ extension User {
         return user
     }
     
+    static func changeUserState(userId: String, online: Bool, completion: Void) {
+        guard let context = StorageManager.getContext() else {
+            print ("Failed to retrieve save context")
+            completion
+            return
+        }
+        guard let model = context.persistentStoreCoordinator?.managedObjectModel else {
+            print("Model is not available in context!")
+            assert (false)
+            completion
+            return
+        }
+        if let fetchRequest = User.fetchRequestUserById(model: model, id: userId) {
+            do {
+                let results = try context.fetch(fetchRequest)
+                if let foundUser = results.first {
+                    foundUser.isOnline = online
+                }
+            } catch {
+                print("Failed to fetch User \(error)")
+                completion
+            }
+        }
+        StorageManager.save(completion: completion)
+    }
+    
     static func fetchRequestUserById(model: NSManagedObjectModel, id: String) -> NSFetchRequest<User>? {
         let templateName = "UserById"
         guard let fetchRequest = model.fetchRequestFromTemplate(withName: templateName, substitutionVariables: ["id" : id]) as? NSFetchRequest<User> else {
@@ -112,8 +138,8 @@ extension User {
         return fetchRequest
     }
     
-    static func fetchRequestOnlineUsers(model: NSManagedObjectModel) -> NSFetchRequest<User>? {
-        let templateName = "OnlineUsers"
+    static func fetchRequestUsers(model: NSManagedObjectModel) -> NSFetchRequest<User>? {
+        let templateName = "Users"
         guard let fetchRequest = model.fetchRequestTemplate(forName: templateName) as? NSFetchRequest<User> else {
             assert(false, "No template with name \(templateName)!")
             return nil

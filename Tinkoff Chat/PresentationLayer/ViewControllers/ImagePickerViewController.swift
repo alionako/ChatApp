@@ -67,13 +67,12 @@ extension ImagePickerViewController : UICollectionViewDelegate, UICollectionView
         if cell.imageLoaded != nil && cell.imageLoaded! {
             var dataToSave = UserData.init()
             dataToSave.image = cell.imageView.image
-            GCDDataManager().saveData(data: dataToSave, success: {self.imageSaveSuccess()}, failure: {})
+            GCDDataManager().saveData(data: dataToSave, success: {self.imageSaveSuccess(dataToSave.image!)}, failure: {})
         }
     }
     
-    private func imageSaveSuccess() {
-        // TODO: Add here update of user image
-       // self.delegate?.getSavedData()
+    private func imageSaveSuccess(_ image: UIImage) {
+        self.delegate?.getSavedData()
         self.dismiss(animated: true, completion: nil)
     }
 }

@@ -11,10 +11,18 @@ import UIKit
 class ConversationViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var table: UITableView!
     
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    
     var dataSource : [String]?
-    var frame : CGRect?
+    
+    var opponent : String?
+    var dataProvider : ChatDataProvider?
+    
+    var communicator : MultipeerCommunicator? = nil
+    var communicationManager : CommunicationManager? = nil
     
     var titleLabel : UILabel?
     
@@ -24,19 +32,15 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
         self.table.rowHeight = UITableViewAutomaticDimension
         self.table.estimatedRowHeight = 100
         
-        frame = self.view.frame
-        self.navigationItem.backBarButtonItem?.title = ""
+        self.subscribeForKeyboardNotifications()
+        self.subscribeForTextFieldChange()
         
-        self.dataSource = [" ", "Сообщение номер 2", "Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение Очень длинное сообщение"]
+        dataProvider = ChatDataProvider(tableView: table, conversationId: opponent!)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-            self.animateButton()
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        self.animateTitle(connected: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -44,31 +48,71 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        guard let sectionsCount = dataProvider?.fetchedResultsController.sections?.count else {
+            return 0
+        }
+        return sectionsCount
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (self.dataSource?.count)!
+        guard let sections = dataProvider?.fetchedResultsController.sections else {
+            return 0
+        }
+        return sections[section].numberOfObjects
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:MessageBubbleCell = tableView.dequeueReusableCell(withIdentifier: "MessageBubbleCell") as! MessageBubbleCell
-        cell.txt = dataSource?[indexPath.row]
+        if let message = dataProvider?.fetchedResultsController.object(at: indexPath) {
+            cell.configure(withMessage: message)
+        }
         return cell
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        self.view.frame = CGRect.init(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height - 300)
-
+        
         return true
     }
     
+    func subscribeForTextFieldChange() {
+        textField.addTarget(self, action: #selector(onTextChange), for: UIControlEvents.editingChanged)
+    }
+        
+    
+    func onTextChange() {
+        if textField.text?.characters.count == nil {
+            sendButton.isEnabled = false
+        } else if textField.text!.characters.count == 1 {
+            self.animateButton()
+        }
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.frame = frame!
         textField.resignFirstResponder()
         return true
     }
     
+    func completion() {
+        self.dataProvider?.fetchResults()
+    }
+    
+    @IBAction func sendMessage(_ sender: Any) {
+        let text = textField.text
+        textField.text = nil
+        sendButton.isEnabled = false
+        self.communicator?.sendMessage(string: text!, to: self.opponent!, completionHandler: { (success, err) in
+            if success {
+                print("Success!")
+            } else if let error = err {
+                print("ERROR: \(error)")
+            } else {
+                print ("No success this time :(")
+            }
+            Message.saveMessage(userId: self.opponent!, text: text!, sentByAppUser: true, completion: self.completion())
+        })
+    }
+    
+    // MARK - Animation
     func animateButton() {
         UIView.transition(with: sendButton,
                                   duration: 0.5,
@@ -82,7 +126,7 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
                                     })
     }
     
-    func animateTitle() {
+    func animateTitle(connected: Bool) {
         if titleLabel == nil {
             let title = self.navigationItem.title
             titleLabel = UILabel()
@@ -90,10 +134,10 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
             titleLabel?.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width/2, height:100)
             self.navigationItem.titleView = titleLabel
         }
-        if titleLabel?.textColor == UIColor.green {
-            self.titleAnimation(color: UIColor.black, scale: 1.0, options: .curveEaseOut)
-        } else {
+        if connected == true {
             self.titleAnimation(color: UIColor.green, scale: 1.1, options: .curveEaseIn)
+        } else {
+            self.titleAnimation(color: UIColor.black, scale: 1.0, options: .curveEaseOut)
         }
     }
     
@@ -107,8 +151,34 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
         }, completion: nil)
     }
     
-    @IBAction func handleTap(_ sender: UITapGestureRecognizer) {
-        self.animateTitle()
+    @IBAction func handleLongPress(_ sender: UILongPressGestureRecognizer) {
         LogoEmitter.emitLogos(self.view, recognizer: sender)
+    }
+    
+    // MARK - Keyboard stuff
+    private func subscribeForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        let keyboardSize : CGRect = (notification.userInfo! as NSDictionary).object(forKey: UIKeyboardFrameBeginUserInfoKey as AnyObject) as! CGRect
+        bottomConstraint.constant = keyboardSize.size.height
+        view.layoutIfNeeded()
+        self.scrollToBottom()
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        bottomConstraint.constant = 0
+        view.layoutIfNeeded()
+        self.scrollToBottom()
+    }
+    
+    private func scrollToBottom() {
+        let lastRowIndex = table.numberOfRows(inSection: 0) - 1
+        if lastRowIndex >= 0 {
+            let indexPath = IndexPath(row: lastRowIndex, section: 0)
+            table.scrollToRow(at: indexPath, at: UITableViewScrollPosition.bottom, animated: false)
+        }
     }
 }

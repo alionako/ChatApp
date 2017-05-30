@@ -40,18 +40,21 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
 
     // MARK - ViewController lifecycle
-    override func viewDidLoad() {
+    
+    override func viewDidLoad()  {
+        
+        super.viewDidLoad()
+        
+        self.indicator.stopAnimating()
+        self.enableButtons(enable: false)
+        self.getSavedData()
         
         let tapGesture = UITapGestureRecognizer(target: self, action:#selector(self.onTapAction))
         view.addGestureRecognizer(tapGesture)
-        
-        self.indicator.stopAnimating()
-        self.getSavedData()
-        self.enableButtons(enable: false)
     }
     
     func getSavedData() {
-        let dataFunction : (UserData?) -> () = { data in
+        self.operationDataManager.retrieveData(setDataFunction: { data in
             guard data != nil else { return }
             if data?.name != nil {
                 self.name.text = data?.name
@@ -66,8 +69,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
             if data?.image != nil {
                 self.userPic.image = data?.image
             }
-        }
-        self.operationDataManager.retrieveData(setDataFunction: dataFunction)
+        })
     }
     
     // MARK - Hide keyboard
@@ -176,11 +178,6 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         self.onTapAction()
     }
     
-    @IBAction func emitLogos(_ sender: UITapGestureRecognizer) {
-        LogoEmitter.emitLogos(self.view, recognizer: sender)
-    }
-    
-    
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [String : Any]){
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
@@ -234,38 +231,5 @@ extension ProfileViewController : UITextFieldDelegate {
         self.onTapAction()
         dataToSave?.name = textField.text
         return true;
-    }
-}
-
-extension ProfileViewController {
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        printInfo(function: #function, views: self.view.subviews)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        printInfo(function: #function, views: self.view.subviews)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        printInfo(function: #function, views: self.view.subviews)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        printInfo(function: #function, views: self.view.subviews)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        printInfo(function: #function, views: self.view.subviews)
-    }
-    
-    private func printInfo (function: Any, views: [UIView]) {
-        print(function)
-        print(views)
     }
 }

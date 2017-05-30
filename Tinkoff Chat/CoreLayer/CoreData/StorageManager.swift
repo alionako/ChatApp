@@ -72,7 +72,7 @@ class StorageManager {
         return nil
     }
     
-    static func getOnlineUsers() -> [User]? {
+    static func getUsers() -> [User]? {
         
         guard let context = StorageManager.coreDataStack?.saveContext else {
             return nil 
@@ -82,18 +82,18 @@ class StorageManager {
             assert (false)
             return nil
         }
-        var onlineUsers : [User]?
-        guard let fetchRequest = User.fetchRequestOnlineUsers(model: model) else {
+        var users : [User]?
+        guard let fetchRequest = User.fetchRequestUsers(model: model) else {
             return nil
         }
         
         do {
-            onlineUsers = try context.fetch(fetchRequest)
+            users = try context.fetch(fetchRequest)
         } catch {
             print("Failed to fetch online users \(error)")
         }
         
-        return onlineUsers
+        return users
     }
     
     static func findOrInsertAppUser(in context: NSManagedObjectContext) -> AppUser? {
