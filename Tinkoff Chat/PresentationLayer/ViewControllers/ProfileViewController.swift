@@ -176,11 +176,6 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         self.onTapAction()
     }
     
-    @IBAction func emitLogos(_ sender: UITapGestureRecognizer) {
-        LogoEmitter.emitLogos(self.view, recognizer: sender)
-    }
-    
-    
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [String : Any]){
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {

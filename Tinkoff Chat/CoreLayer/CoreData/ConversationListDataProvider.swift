@@ -1,5 +1,5 @@
 //
-//  DataProvider.swift
+//  CnversationListDataProvider.swift
 //  Tinkoff Chat
 //
 //  Created by Aliona on 13/05/2017.
@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DataProvider : NSObject {
+class ConversationListDataProvider : NSObject {
     let fetchedResultsController : NSFetchedResultsController<User>
     let tableView : UITableView
     
@@ -19,10 +19,11 @@ class DataProvider : NSObject {
         
         let context = StorageManager.getContext()!
         let model = context.persistentStoreCoordinator?.managedObjectModel
-        let fetchRequest = User.fetchRequestOnlineUsers(model: model!)
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-        fetchRequest?.sortDescriptors = [sortDescriptor]
-        fetchedResultsController = NSFetchedResultsController<User> (fetchRequest: fetchRequest!, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        let fetchRequest = User.fetchRequestUsers(model: model!)
+        let onlineSortDescriptor = NSSortDescriptor(key: "isOnline", ascending: true)
+        let nameSortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        fetchRequest?.sortDescriptors = [onlineSortDescriptor, nameSortDescriptor]
+        fetchedResultsController = NSFetchedResultsController<User> (fetchRequest: fetchRequest!, managedObjectContext: context, sectionNameKeyPath: "isOnline", cacheName: nil)
         
         super.init()
         fetchedResultsController.delegate = self
@@ -38,7 +39,7 @@ class DataProvider : NSObject {
     }
 }
 
-extension DataProvider : NSFetchedResultsControllerDelegate {
+extension ConversationListDataProvider : NSFetchedResultsControllerDelegate {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()

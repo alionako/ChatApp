@@ -29,5 +29,8 @@ class MessageBubbleCell : UITableViewCell, MessageCellCofiguration {
             label.text = txt
         }
     }
-
+    
+    func configure(withMessage: Message) {
+        txt = withMessage.text
+    }
 }

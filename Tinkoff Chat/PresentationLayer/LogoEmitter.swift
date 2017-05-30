@@ -9,27 +9,33 @@
 import UIKit
 
 class LogoEmitter {
-    static func emitLogos(_ view: UIView, recognizer: UITapGestureRecognizer) {
-        
-        LogoEmitter.removeEmitterLayer(view)
-        
-        let tapPoint : CGPoint = recognizer.location(in: view)
-        let emitterLayer = CAEmitterLayer()
-        
-        emitterLayer.emitterPosition = CGPoint(x: tapPoint.x, y: tapPoint.y)
-        
-        let cell = CAEmitterCell()
-        cell.birthRate = 10
-        cell.lifetime = 5
-        cell.velocity = 50
-        cell.scale = 0.05
-        
-        cell.emissionRange = 10
-        cell.contents = UIImage(named: "Logo.png")!.cgImage
-        
-        emitterLayer.emitterCells = [cell]
-        
-        view.layer.addSublayer(emitterLayer)
+    static func emitLogos(_ view: UIView, recognizer: UILongPressGestureRecognizer) {
+        if recognizer.state  == .began {
+    
+            LogoEmitter.removeEmitterLayer(view)
+            
+            let tapPoint : CGPoint = recognizer.location(in: view)
+            let emitterLayer = CAEmitterLayer()
+            
+            emitterLayer.emitterPosition = CGPoint(x: tapPoint.x, y: tapPoint.y)
+            
+            let cell = CAEmitterCell()
+            cell.birthRate = 10
+            cell.lifetime = 5
+            cell.velocity = 50
+            cell.scale = 0.05
+            
+            cell.emissionRange = 10
+            cell.contents = UIImage(named: "Logo.png")!.cgImage
+            
+            emitterLayer.emitterCells = [cell]
+            
+            view.layer.addSublayer(emitterLayer)
+        } else if (recognizer.state == .cancelled
+                || recognizer.state == .failed
+                || recognizer.state == .ended) {
+            LogoEmitter.removeEmitterLayer(view)
+        }
     }
     
     private static func removeEmitterLayer(_ view: UIView) {

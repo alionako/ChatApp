@@ -94,6 +94,32 @@ extension User {
         return user
     }
     
+    static func changeUserState(userId: String, online: Bool, completion: Void) {
+        guard let context = StorageManager.getContext() else {
+            print ("Failed to retrieve save context")
+            completion
+            return
+        }
+        guard let model = context.persistentStoreCoordinator?.managedObjectModel else {
+            print("Model is not available in context!")
+            assert (false)
+            completion
+            return
+        }
+        if let fetchRequest = User.fetchRequestUserById(model: model, id: userId) {
+            do {
+                let results = try context.fetch(fetchRequest)
+                if let foundUser = results.first {
+                    foundUser.isOnline = online
+                }
+            } catch {
+                print("Failed to fetch User \(error)")
+                completion
+            }
+        }
+        StorageManager.save(completion: completion)
+    }
+    
     static func fetchRequestUserById(model: NSManagedObjectModel, id: String) -> NSFetchRequest<User>? {
         let templateName = "UserById"
         guard let fetchRequest = model.fetchRequestFromTemplate(withName: templateName, substitutionVariables: ["id" : id]) as? NSFetchRequest<User> else {
@@ -112,8 +138,8 @@ extension User {
         return fetchRequest
     }
     
-    static func fetchRequestOnlineUsers(model: NSManagedObjectModel) -> NSFetchRequest<User>? {
-        let templateName = "OnlineUsers"
+    static func fetchRequestUsers(model: NSManagedObjectModel) -> NSFetchRequest<User>? {
+        let templateName = "Users"
         guard let fetchRequest = model.fetchRequestTemplate(forName: templateName) as? NSFetchRequest<User> else {
             assert(false, "No template with name \(templateName)!")
             return nil
@@ -131,4 +157,65 @@ extension User {
         return nil
     }
  
+}
+
+
+extension Message {
+    static func fetchRequestMessages(model: NSManagedObjectModel, conversationId: String) -> NSFetchRequest<Message>? {
+        let templateName = "MessagesForConversation"
+        guard let fetchRequest = model.fetchRequestFromTemplate(withName: templateName, substitutionVariables: ["id" : conversationId]) as? NSFetchRequest<Message> else {
+            assert(false, "No template with name \(templateName)!")
+            return nil
+        }
+        return fetchRequest.copy() as? NSFetchRequest<Message>
+    }
+    
+    static func saveMessage(userId: String, text: String, sentByAppUser: Bool, completion: Void) {
+        guard let context = StorageManager.getContext() else {
+            print ("Failed to retrieve save context")
+            completion
+            return
+        }
+        guard let model = context.persistentStoreCoordinator?.managedObjectModel else {
+            print("Model is not available in context!")
+            assert (false)
+            completion
+            return
+        }
+        
+        var conversation : Conversation?
+        if let fetchRequest = Conversation.fetchConversationById(model: model, conversationId: userId) {
+            do {
+                let results = try context.fetch(fetchRequest)
+                if let foundConversation = results.first {
+                    conversation = foundConversation
+                } else {
+                    conversation = NSEntityDescription.insertNewObject(forEntityName: "Conversation", into: context) as? Conversation
+                    conversation?.conversationId = userId
+                }
+            } catch {
+                print("Failed to fetch Conversation \(error)")
+            }
+        }
+        
+        let message = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as? Message
+        message?.conversation = conversation
+        message?.date = NSDate()
+        message?.sentByAppUser = sentByAppUser
+        message?.text = text
+        message?.messageId = "\(NSDate().timeIntervalSinceReferenceDate)"
+        
+        StorageManager.save(completion: completion)
+    }
+}
+
+extension Conversation {
+    static func fetchConversationById(model: NSManagedObjectModel, conversationId: String) -> NSFetchRequest<Conversation>? {
+        let templateName = "ConversationById"
+        guard let fetchRequest = model.fetchRequestFromTemplate(withName: templateName, substitutionVariables: ["id" : conversationId]) as? NSFetchRequest<Conversation> else {
+            assert(false, "No template with name \(templateName)!")
+            return nil
+        }
+        return fetchRequest.copy() as? NSFetchRequest<Conversation>
+    }
 }

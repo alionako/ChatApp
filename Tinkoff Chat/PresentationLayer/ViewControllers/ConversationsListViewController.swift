@@ -13,8 +13,7 @@ class ConversationsListViewController: UIViewController, UITableViewDelegate, UI
     
     @IBOutlet weak var contactTable: UITableView!
     
-    var contactList : [String : String?]?
-    var dataProvider : DataProvider?
+    var dataProvider : ConversationListDataProvider?
     
     var communicator : MultipeerCommunicator? = nil
     var communicationManager : CommunicationManager? = nil
@@ -28,7 +27,7 @@ class ConversationsListViewController: UIViewController, UITableViewDelegate, UI
             communicationManager?.contactListViewController = self
         }
         communicator?.delegate = communicationManager
-        dataProvider = DataProvider(tableView: contactTable)
+        dataProvider = ConversationListDataProvider(tableView: contactTable)
     }
     
     // MARK - Tableview
@@ -57,20 +56,31 @@ class ConversationsListViewController: UIViewController, UITableViewDelegate, UI
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
-        let controller = self.getInitialViewController(fromStoryBoard: "ChatScreen")
-        controller.title = (cell as! MessagePreviewCell).chatName.text
+        let controller = self.getInitialViewController(fromStoryBoard: "ChatScreen") as! ConversationViewController
+        
+        let withUser = (cell as! MessagePreviewCell).chatName.text
+        controller.title = withUser
+        controller.opponent = withUser
+        
+        controller.communicator = communicator
+        controller.communicationManager = communicationManager
+
         self.show(controller, sender: cell)
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            return "Online"
-        case 1:
-            return "History"
-        default:
-            return ""
+        if let objects = self.dataProvider?.fetchedResultsController.sections?[section].objects {
+            if objects.count > 0 {
+                if let object = objects[0] as? User {
+                    if object.isOnline {
+                        return "Online"
+                    } else {
+                        return "History"
+                    }
+                }
+            }
         }
+        return ""
     }
     
     func showAlertWithText(_ text: String) {
@@ -90,5 +100,4 @@ class ConversationsListViewController: UIViewController, UITableViewDelegate, UI
         let storyboard = UIStoryboard(name: fromStoryBoard, bundle: nil)
         return storyboard.instantiateInitialViewController()!
     }
-    
 }
