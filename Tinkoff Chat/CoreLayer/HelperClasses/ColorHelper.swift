@@ -41,7 +41,10 @@ class ColorHelper : ColorHelperProtocol {
     }
     
     static func getColorFromStruct(_ colorStruct : LabelColor) -> UIColor {
-        return UIColor.init(colorLiteralRed: Float(colorStruct.red), green: Float(colorStruct.green), blue: Float(colorStruct.blue), alpha: Float(colorStruct.alpha))
+        return UIColor.init(red: CGFloat(colorStruct.red),
+                       green: CGFloat(colorStruct.green),
+                       blue: CGFloat(colorStruct.blue),
+                       alpha: CGFloat(colorStruct.alpha))
     }
     
     static func getColorStructFromArray(_ array: [CGFloat]) -> LabelColor? {

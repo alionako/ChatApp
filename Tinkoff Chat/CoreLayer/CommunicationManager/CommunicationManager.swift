@@ -15,6 +15,7 @@ class CommunicationManager : CommunicatorDelegate {
     
     func didReceiveMessage(text: String, fromUser: String, toUser: String) {
         contactListViewController?.showAlertWithText("Ого, сообщение от пользователя \(fromUser)!!! Текст сообщения: \(text)")
+        print("GOT A MESSAGE! HOOORAY!")
     }
     
     func failedToStartAdvertising(error: Error) {
@@ -36,12 +37,12 @@ class CommunicationManager : CommunicatorDelegate {
     }
     
     func updateResults() {
-        do {
+        /*do {
             try contactListViewController?.dataProvider?.fetchedResultsController.performFetch()
             try chatViewController?.dataProvider?.fetchedResultsController.performFetch()
         } catch {
             print("Failed to perform fetch")
-        }
+        }*/
         contactListViewController?.dataProvider?.fetchResults()
         chatViewController?.dataProvider?.fetchResults()
     }

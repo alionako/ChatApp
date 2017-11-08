@@ -37,7 +37,7 @@ class MessagePreviewCell : UITableViewCell, ConverstationCellConfiguration {
         }
         set {
             _message = newValue
-            if _message == nil || _message?.characters.count == 0 {
+            if _message == nil || _message?.count == 0 {
                 messageTextPreview.text = "No messages yet"
                 messageTextPreview.font = UIFont.italicSystemFont(ofSize: CGFloat(FONT_SIZE))
             } else {

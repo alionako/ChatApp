@@ -82,9 +82,9 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
         
     
     func onTextChange() {
-        if textField.text?.characters.count == nil {
+        if textField.text?.count == nil {
             sendButton.isEnabled = false
-        } else if textField.text!.characters.count == 1 {
+        } else if textField.text?.count == 1 {
             self.animateButton()
         }
     }
