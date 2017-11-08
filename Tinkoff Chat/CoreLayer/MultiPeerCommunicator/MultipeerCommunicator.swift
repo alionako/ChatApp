@@ -164,7 +164,7 @@ extension MultipeerCommunicator : MCNearbyServiceBrowserDelegate {
 
 
 extension MultipeerCommunicator : MCSessionDelegate {
-    
+
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         NSLog("%@", "peer \(peerID) didChangeState: \(state.rawValue)")
         let userID = peerID.displayName
@@ -197,7 +197,6 @@ extension MultipeerCommunicator : MCSessionDelegate {
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
         print("%@", "didFinishReceivingResourceWithName")
     }
-
 }
 
 

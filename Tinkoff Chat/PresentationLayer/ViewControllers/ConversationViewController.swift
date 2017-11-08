@@ -81,7 +81,7 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
     }
         
     
-    func onTextChange() {
+    @objc func onTextChange() {
         if textField.text?.count == nil {
             sendButton.isEnabled = false
         } else if textField.text?.count == 1 {
@@ -163,14 +163,14 @@ class ConversationViewController : UIViewController, UITableViewDelegate, UITabl
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func keyboardWillShow(notification: NSNotification) {
+    @objc func keyboardWillShow(notification: NSNotification) {
         let keyboardSize : CGRect = (notification.userInfo! as NSDictionary).object(forKey: UIKeyboardFrameBeginUserInfoKey as AnyObject) as! CGRect
         bottomConstraint.constant = keyboardSize.size.height
         view.layoutIfNeeded()
         self.scrollToBottom()
     }
     
-    func keyboardWillHide(notification: NSNotification) {
+    @objc func keyboardWillHide(notification: NSNotification) {
         bottomConstraint.constant = 0
         view.layoutIfNeeded()
         self.scrollToBottom()

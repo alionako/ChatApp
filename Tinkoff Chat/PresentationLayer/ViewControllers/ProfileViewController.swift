@@ -74,7 +74,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     // MARK - Hide keyboard
     
-    func onTapAction() {
+    @objc func onTapAction() {
         view.endEditing(true)
     }
     

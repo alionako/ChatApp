@@ -31,8 +31,8 @@ class SaveUserDataOperation : Operation {
         }
         
         let failure = {
-            self.vc.showSaveFailureAlert { (Void) in
-                
+            self.vc.showSaveFailureAlert {
+                print("Failure")
             }
         }
         
